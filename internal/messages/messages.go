@@ -95,7 +95,7 @@ func (m *Messages) Send(ctx context.Context, id int64, message entity.OutgoingMe
 
 	_, err := m.bot.Send(tgMessage)
 	if err != nil {
-		return errors.Wrap(err, "can't send message")
+		return errors.Wrap(err, "can't send telegram message")
 	}
 
 	return nil

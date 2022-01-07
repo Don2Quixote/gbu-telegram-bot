@@ -23,6 +23,8 @@ func (b *Bot) handleNewPost(ctx context.Context, event entity.PostEvent) {
 		}
 	}
 
+	b.log.Infof("subscribed users: %d", len(subscribed))
+
 	message := entity.OutgoingMessage{
 		Text: newNotificationText(event.Post),
 		InlineKeyboard: &entity.InlineKeyboard{

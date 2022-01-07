@@ -29,4 +29,5 @@ $ source deployments/local.env
 | lint | Runs linters                                                                           |
 | test | Runs tests, but there are no tests                                                     |
 | run  | Sources env variables from [deployments/local.env](deployments/local.env) and runs app |
+
 Директория [scripts](/scripts) содержит скрипты, которые вызываются командами из [Makefile](Makefile)

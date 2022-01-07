@@ -17,6 +17,7 @@ It uses [PostgreSQL](https://www.postgresql.org/) as a storage for bot's users.
 | RABBIT_AMQPS           | bool   | Flag to use amqps protocol instead of amqp                                         |
 | RABBIT_RECONNECT_DELAY | int    | Delay (seconds) before attempting to reconnect to rabbit after loosing connection  |
 | MESSAGES_SENDING_DELAY | int    | Delay (milliseconds) between sending messages in telegram to avoid hitting [limits](https://core.telegram.org/bots/faq#broadcasting-to-users)|
+
 Env template for sourcing is [deployments/local.env](deployments/local.env)
 ```
 $ source deployments/local.env

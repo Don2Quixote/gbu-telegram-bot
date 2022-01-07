@@ -32,9 +32,10 @@ func (b *Bot) handleStart(ctx context.Context, from entity.MessageSender) {
 	_, err := b.users.Get(ctx, from.ID)
 	if err == entity.ErrUserNotFound {
 		err := b.users.Add(ctx, entity.User{
-			ID:       from.ID,
-			Username: from.Username,
-			Name:     from.Name,
+			ID:           from.ID,
+			Username:     from.Username,
+			Name:         from.Name,
+			IsSubscribed: true,
 		})
 		if err != nil {
 			b.replyWithErrorMessage(ctx, errors.Wrap(err, "can't add user"), from)

@@ -5,7 +5,7 @@ import "gbu-telegram-bot/internal/entity"
 var greetingMessage = entity.OutgoingMessage{
 	Text: `👋 Welcome to Go Blog Updates bot
 
-📥 I will notify you once something will be posted in blog
+📥 I will notify you once something will be posted in [blog](https://go.dev/blog)
 
 ℹ️ You can unsubscribe from updates any moment pressing button or sending command /unsubscribe`,
 	Keyboard: &entity.Keyboard{

@@ -52,15 +52,20 @@ func (c *Consumer) Init(ctx context.Context) error {
 		return errors.Wrap(err, "can't get rabbit channel")
 	}
 
+	err = ch.ExchangeDeclare(postsExchange, amqp.ExchangeFanout, true, false, false, false, nil)
+	if err != nil {
+		return errors.Wrap(err, "can't declare posts exchange")
+	}
+
 	_, err = ch.QueueDeclare(postsQueue, true, false, false, false, nil)
 	if err != nil {
-		return errors.Wrap(err, "can't declare queue")
+		return errors.Wrap(err, "can't declare posts queue")
 	}
 
 	// Exchange is fanout so no binding key required
 	err = ch.QueueBind(postsQueue, "", postsExchange, false, nil)
 	if err != nil {
-		return errors.Wrap(err, "can't bind queue")
+		return errors.Wrap(err, "can't bind posts queue to posts exchange")
 	}
 
 	errs := make(chan *amqp.Error)

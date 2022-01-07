@@ -26,5 +26,5 @@ $ source deployments/local.env
 | name | description                                                                            |
 | ---- | -------------------------------------------------------------------------------------- |
 | lint | Runs linters                                                                           |
-| test | Runs tests, but there are no tests                                                    |
+| test | Runs tests, but there are no tests                                                     |
 | run  | Sources env variables from [deployments/local.env](deployments/local.env) and runs app |

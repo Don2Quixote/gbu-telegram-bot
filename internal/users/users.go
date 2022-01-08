@@ -40,7 +40,7 @@ func (u *Users) Get(ctx context.Context, id int64) (entity.User, error) {
 
 	user := entity.User{ID: id}
 	err := row.Scan(&user.Username, &user.Name, &user.IsSubscribed)
-	if err == pgx.ErrNoRows {
+	if errors.Is(err, pgx.ErrNoRows) {
 		return entity.User{}, entity.ErrUserNotFound
 	}
 	if err != nil {

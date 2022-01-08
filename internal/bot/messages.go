@@ -30,7 +30,7 @@ func (b *Bot) handleMessage(ctx context.Context, msg entity.IncomingMessage) {
 
 func (b *Bot) handleStart(ctx context.Context, from entity.MessageSender) {
 	_, err := b.users.Get(ctx, from.ID)
-	if err == entity.ErrUserNotFound {
+	if errors.Is(err, entity.ErrUserNotFound) {
 		err := b.users.Add(ctx, entity.User{
 			ID:           from.ID,
 			Username:     from.Username,
@@ -42,7 +42,7 @@ func (b *Bot) handleStart(ctx context.Context, from entity.MessageSender) {
 			return
 		}
 	}
-	if err != nil && err != entity.ErrUserNotFound {
+	if err != nil && !errors.Is(err, entity.ErrUserNotFound) {
 		b.replyWithErrorMessage(ctx, errors.Wrap(err, "can't get user"), from)
 		return
 	}

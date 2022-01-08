@@ -26,6 +26,10 @@ type Messages struct {
 
 // New returns bot.Messages implementation
 func New(bot *tgbotapi.BotAPI, cfg Config, log logger.Logger) *Messages {
+	// "github.com/go-telegram-bot-api/telegram-bot-api/v5" has disgusting moment
+	// Let me introduce it:
+	_ = tgbotapi.SetLogger(&tgbotapiLogger{log: log})
+
 	return &Messages{
 		bot: bot,
 		cfg: cfg,

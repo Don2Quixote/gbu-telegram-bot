@@ -43,6 +43,7 @@ type OutgoingMessage struct {
 type Keyboard [][]string
 
 // InlineKeyboard is struct that represents telegram chat's keyboard attached to a message
+// InlineKeyboard[row][column] = inline button with either URL or callback
 type InlineKeyboard [][]InlineButton
 
 // InlineButton is button in InlineKeyboard

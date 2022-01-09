@@ -16,7 +16,7 @@ import (
 	"github.com/streadway/amqp"
 )
 
-// Consumer is implementation for bot.Consumer interface
+// Consumer is implementation for bot.Consumer interface.
 type Consumer struct {
 	rabbitConfig RabbitConfig
 	rabbit       *amqp.Channel
@@ -24,7 +24,7 @@ type Consumer struct {
 	mu           *sync.RWMutex
 }
 
-// New returns bot.Consumer implementation
+// New returns bot.Consumer implementation.
 func New(rabbitConfig RabbitConfig, log logger.Logger) *Consumer {
 	return &Consumer{
 		rabbitConfig: rabbitConfig,
@@ -36,7 +36,7 @@ func New(rabbitConfig RabbitConfig, log logger.Logger) *Consumer {
 
 // Init connects to rabbit and gets rabbit channel, after what
 // initializes rabbit's entiies like exchanges, queues etc.
-// It also registers a handler for channel closed event to reconnect
+// It also registers a handler for channel closed event to reconnect.
 func (c *Consumer) Init(ctx context.Context) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -103,7 +103,7 @@ func (c *Consumer) Init(ctx context.Context) error {
 	return nil
 }
 
-// Consumer returns channel with new blog's posts
+// Consumer returns channel with new blog's posts.
 func (c *Consumer) Consume(ctx context.Context) (<-chan entity.PostEvent, error) {
 	messages, err := c.rabbit.Consume(postsQueue, consumerName, false, false, false, false, nil)
 	if err != nil {

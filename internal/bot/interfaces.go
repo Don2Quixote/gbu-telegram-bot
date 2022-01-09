@@ -7,14 +7,14 @@ import (
 )
 
 // Consumer is interface for interacting with message broker
-// from where events about new posts in blog come
+// from where events about new posts in blog come.
 type Consumer interface {
 	// Consumer returns channel to which new blog's posts will be sent
 	Consume(ctx context.Context) (<-chan entity.PostEvent, error)
 }
 
 // Users is interface for interacting with storage where
-// information about bot's users stored
+// information about bot's users stored.
 type Users interface {
 	// Add adds new user
 	Add(ctx context.Context, user entity.User) error
@@ -29,7 +29,7 @@ type Users interface {
 	GetSubscribedIDs(ctx context.Context) ([]int64, error)
 }
 
-// Messages is interface for interacting with telegram's messages
+// Messages is interface for interacting with telegram's messages.
 type Messages interface {
 	// Consume returns channel to which telegram bot's
 	// incoming messages will be sent

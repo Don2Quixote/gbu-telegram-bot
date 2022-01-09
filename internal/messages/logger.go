@@ -8,9 +8,9 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-// tgbotapi lib has very uncool logger without possibility to disable it
-// At least lib provides interface and possitibilty to implement it
-// I put Warns in implementation because I don't think this lib logs something happy
+// tgbotapi lib has very uncool logger without possibility to disable it.
+// At least lib provides interface and possitibilty to implement it.
+// I put Warns in implementation because I don't think this lib logs something happy.
 type tgbotapiLogger struct {
 	log logger.Logger
 }

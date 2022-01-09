@@ -10,8 +10,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// handleCommand handles incoming command
-// It calls one of methods depending on cmd.Action
+// handleCMessage handles incoming message.
+// It calls one of methods with command's handling depending on message's text.
 func (b *Bot) handleMessage(ctx context.Context, msg entity.IncomingMessage) {
 	start := time.Now()
 	command := parseCommand(msg.Text)
@@ -99,9 +99,9 @@ func (b *Bot) handleUnknown(ctx context.Context, from entity.MessageSender) {
 }
 
 // replyWithErrorMessage logs error, sends errorMessage to user
-// and logs error if it occurs on sending
-// As error can happen in many places it's better to wrap this logic in this
-// method to reduce code's length
+// and logs error if it occurs on sending.
+// As error can happen in many places so it's better to wrap this logic in this
+// method to reduce code's length.
 func (b *Bot) replyWithErrorMessage(ctx context.Context, err error, from entity.MessageSender) {
 	b.log.Error(err)
 	err = b.messages.Send(ctx, from.ID, errorMessage)
@@ -110,7 +110,7 @@ func (b *Bot) replyWithErrorMessage(ctx context.Context, err error, from entity.
 	}
 }
 
-// parseCommand parses command from message's text
+// parseCommand parses command from message's text.
 func parseCommand(message string) entity.Command {
 	message = strings.ToLower(message)
 	switch message {

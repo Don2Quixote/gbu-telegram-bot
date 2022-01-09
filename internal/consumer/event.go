@@ -2,7 +2,7 @@ package consumer
 
 import "gbu-telegram-bot/internal/entity"
 
-// PostEvent is implementation for bot.PostEvent interface
+// PostEvent is implementation for bot.PostEvent interface.
 type PostEvent struct {
 	post entity.Post
 	ack  func() error

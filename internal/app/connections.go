@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// makeConnections makes required connections/clients
+// makeConnections makes required connections/clients.
 func makeConnections(ctx context.Context, cfg appConfig) (*pgxpool.Pool, *tgbotapi.BotAPI, error) {
 	pool, err := pgxpool.Connect(ctx, cfg.PostgresHost, cfg.PostgresUser, cfg.PostgresPass, cfg.PostgresDBName)
 	if err != nil {

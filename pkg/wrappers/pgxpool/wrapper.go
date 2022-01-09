@@ -8,11 +8,11 @@ import (
 )
 
 // Connect is wrapper for original pgxpool.Connect function but with
-// credential-parameters instead of connection string
+// credential-parameters instead of connection string.
 func Connect(ctx context.Context, host, user, pass, dbName string) (*pgxpool.Pool, error) {
 	connString := fmt.Sprintf("postgres://%s:%s@%s/%s", user, pass, host, dbName)
 	return pgxpool.Connect(ctx, connString)
 }
 
-// Forward type
+// Pool is forward type.
 type Pool = pgxpool.Pool

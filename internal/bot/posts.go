@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// handleNewPost handles new post - sends notifications to subscribers
+// handleNewPost handles new post - sends notifications to subscribers.
 func (b *Bot) handleNewPost(ctx context.Context, event entity.PostEvent) {
 	b.log.Infof("new blog post %q - %s", event.Post.Title, event.Post.URL)
 

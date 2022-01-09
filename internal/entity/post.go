@@ -3,7 +3,7 @@ package entity
 import "time"
 
 // Post is a short data about post in blog, without content.
-// Content is available at the URL
+// Content is available at the URL.
 type Post struct {
 	Title   string    `json:"title"`
 	Date    time.Time `json:"date"`
@@ -12,7 +12,7 @@ type Post struct {
 	URL     string    `json:"url"`
 }
 
-// PostEvent is struct with post and functions to control event's acknowledgement
+// PostEvent is struct with post and functions to control event's acknowledgement.
 type PostEvent struct {
 	Post Post
 	Ack  func() error

@@ -23,3 +23,4 @@
     - bodyclose
     - goerr113
     - wastedassign
+    - godot

@@ -1,6 +1,6 @@
 package entity
 
-// User is struct that represents telegram user
+// User is struct that represents telegram user.
 type User struct {
 	// ID is telegram user's ID
 	ID int64

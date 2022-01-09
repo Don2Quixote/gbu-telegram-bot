@@ -10,12 +10,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Users is implementation for bot.Users interface
+// Users is implementation for bot.Users interface.
 type Users struct {
 	db *pgxpool.Pool
 }
 
-// New returns bot.Users imlementation
+// New returns bot.Users imlementation.
 func New(pool *pgxpool.Pool) *Users {
 	return &Users{
 		db: pool,

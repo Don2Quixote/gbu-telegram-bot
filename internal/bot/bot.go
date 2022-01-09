@@ -1,4 +1,4 @@
-// Package bot provies main service's logic - notifications for telegram bot's users
+// Package bot provies main service's logic - notifications for telegram bot's users.
 package bot
 
 import (
@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Bot is struct that incapsulates business-logic's dependencies (interfaces)
+// Bot is struct that incapsulates business-logic's dependencies (interfaces).
 type Bot struct {
 	users    Users
 	consumer Consumer
@@ -18,7 +18,7 @@ type Bot struct {
 	log      logger.Logger
 }
 
-// New returns new bot with main business-logic of this service
+// New returns new bot with main business-logic of this service.
 func New(users Users, consumer Consumer, messages Messages, log logger.Logger) *Bot {
 	return &Bot{
 		users:    users,

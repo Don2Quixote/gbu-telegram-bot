@@ -14,7 +14,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Messages is implementation for bot.Messages interface
+// Messages is implementation for bot.Messages interface.
 type Messages struct {
 	bot *tgbotapi.BotAPI
 	cfg Config
@@ -24,7 +24,7 @@ type Messages struct {
 	sending *sync.Mutex
 }
 
-// New returns bot.Messages implementation
+// New returns bot.Messages implementation.
 func New(bot *tgbotapi.BotAPI, cfg Config, log logger.Logger) *Messages {
 	// "github.com/go-telegram-bot-api/telegram-bot-api/v5" has disgusting moment
 	// Let me introduce it:
@@ -79,7 +79,7 @@ func (m *Messages) Consume(ctx context.Context) (<-chan entity.IncomingMessage, 
 	return messages, nil
 }
 
-// Send sends message with MarkdownV2 mode
+// Send sends message with MarkdownV2 mode.
 func (m *Messages) Send(ctx context.Context, id int64, message entity.OutgoingMessage) error {
 	m.sending.Lock()
 	defer func() {

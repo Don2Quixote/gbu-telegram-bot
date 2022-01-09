@@ -1,6 +1,6 @@
 package app
 
-// appConfig is struct for parsing ENV configuration
+// appConfig is struct for parsing ENV configuration.
 type appConfig struct {
 	// TelegramBotToken is token to use Telegram's bot API
 	TelegramBotToken string `config:"TELEGRAM_BOT_TOKEN,required"`

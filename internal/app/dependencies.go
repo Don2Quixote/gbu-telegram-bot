@@ -16,7 +16,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// makeDependencies makes all bot's dependencies
+// makeDependencies makes all bot's dependencies.
 func makeDependencies(
 	ctx context.Context,
 	cfg appConfig,

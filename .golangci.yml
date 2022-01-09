@@ -20,3 +20,6 @@
     - misspell
     - nakedret
     - unparam
+    - bodyclose
+    - goerr113
+    - wastedassign

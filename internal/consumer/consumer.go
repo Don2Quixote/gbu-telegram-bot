@@ -21,7 +21,7 @@ type Consumer struct {
 	rabbitConfig RabbitConfig
 	rabbit       *amqp.Channel
 	log          logger.Logger
-	mu           *sync.RWMutex
+	mu           *sync.Mutex
 }
 
 // New returns bot.Consumer implementation.
@@ -30,7 +30,7 @@ func New(rabbitConfig RabbitConfig, log logger.Logger) *Consumer {
 		rabbitConfig: rabbitConfig,
 		rabbit:       nil, // Initialized in Init method
 		log:          log,
-		mu:           &sync.RWMutex{},
+		mu:           &sync.Mutex{},
 	}
 }
 

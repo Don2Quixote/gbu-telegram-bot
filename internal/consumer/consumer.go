@@ -106,7 +106,6 @@ func (c *Consumer) Init(ctx context.Context) error {
 	return nil
 }
 
-// Consumer returns channel with new blog's posts.
 func (c *Consumer) Consume(ctx context.Context) (<-chan entity.PostEvent, error) {
 	messages, err := c.rabbit.Consume(postsQueue, consumerName, false, false, false, false, nil)
 	if err != nil {

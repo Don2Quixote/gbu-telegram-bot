@@ -37,7 +37,8 @@ func Run(ctx context.Context, log logger.Logger) error {
 	}
 
 	// Constructing and launching bot
-	err = bot.New(users, consumer, messages, log).Launch(ctx)
+	bot := bot.New(users, consumer, messages, log)
+	err = bot.Launch(ctx)
 	if err != nil {
 		return errors.Wrap(err, "can't launch bot")
 	}

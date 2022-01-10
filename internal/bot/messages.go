@@ -43,10 +43,6 @@ func (b *Bot) handleStart(ctx context.Context, from entity.MessageSender) {
 		}
 	}
 	if err != nil && !errors.Is(err, entity.ErrUserNotFound) {
-		b.log.Debugf("err is %v", err)
-		b.log.Debugf("entity.ErrUserNotFound", entity.ErrUserNotFound)
-		b.log.Debugf("err == entity.ErrUserNotFound", err == entity.ErrUserNotFound)
-		b.log.Debugf("errors.Is(err, entity.ErrUserNotFound)", errors.Is(err, entity.ErrUserNotFound))
 		b.replyWithErrorMessage(ctx, errors.Wrap(err, "can't get user"), from)
 		return
 	}

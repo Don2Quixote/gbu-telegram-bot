@@ -10,3 +10,6 @@ test:
 
 lint:
 	./scripts/lint.sh
+
+docker:
+	./scripts/docker.sh

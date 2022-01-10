@@ -28,7 +28,7 @@ type Consumer struct {
 func New(rabbitConfig RabbitConfig, log logger.Logger) *Consumer {
 	return &Consumer{
 		rabbitConfig: rabbitConfig,
-		rabbit:       nil, // Configured in Init method
+		rabbit:       nil, // Initialized in Init method
 		log:          log,
 		mu:           &sync.RWMutex{},
 	}

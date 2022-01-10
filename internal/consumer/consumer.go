@@ -73,6 +73,7 @@ func (c *Consumer) Init(ctx context.Context) error {
 
 	handleChannelClose := func() {
 		closeErr := <-errs // This chan will get a value when rabbit channel will be closed
+
 		c.log.Error(errors.Wrap(closeErr, "rabbit channel closed"))
 
 		if !conn.IsClosed() {
@@ -82,19 +83,19 @@ func (c *Consumer) Init(ctx context.Context) error {
 			}
 		}
 
-		isConnected := false
-		attempt := 1
-		for !isConnected {
+		for attempt, isConnected := 1, false; !isConnected; attempt++ {
 			time.Sleep(cfg.ReconnectDelay)
+
 			err := c.Init(ctx)
 			if err != nil {
 				c.log.Warn(errors.Wrapf(err, "can't connect to rabbit (attempt #%d)", attempt))
-			} else {
-				c.log.Info("reconnected to rabbit")
-				isConnected = true
+				continue
 			}
-			attempt++
+
+			isConnected = true
 		}
+
+		c.log.Info("reconnected to rabbit")
 	}
 	go handleChannelClose()
 

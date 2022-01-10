@@ -88,7 +88,7 @@ func (c *Consumer) Init(ctx context.Context) error {
 
 			err := c.Init(ctx)
 			if err != nil {
-				c.log.Warn(errors.Wrapf(err, "can't connect to rabbit (attempt #%d)", attempt))
+				c.log.Warn(errors.Wrapf(err, "can't re-init consuemr (attempt #%d)", attempt))
 				continue
 			}
 

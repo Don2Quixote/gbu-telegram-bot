@@ -28,7 +28,7 @@ type Consumer struct {
 func New(rabbitConfig RabbitConfig, log logger.Logger) *Consumer {
 	return &Consumer{
 		rabbitConfig: rabbitConfig,
-		rabbit:       nil,
+		rabbit:       nil, // Configured in Init method
 		log:          log,
 		mu:           &sync.RWMutex{},
 	}
@@ -129,17 +129,11 @@ func (c *Consumer) Consume(ctx context.Context) (<-chan entity.PostEvent, error)
 		}
 	}
 
-	handleMessage := func(message amqp.Delivery, ok bool) {
-		if !ok {
-			waitReconnection()
-			return
-		}
-
+	handleMessage := func(message amqp.Delivery) error {
 		var post entity.Post
 		err := json.Unmarshal(message.Body, &post)
 		if err != nil {
-			c.log.Errorf("can't decode message %q", message.Body)
-			return
+			return errors.Wrapf(err, "can't decode message %q", message.Body)
 		}
 
 		posts <- entity.PostEvent{
@@ -147,13 +141,24 @@ func (c *Consumer) Consume(ctx context.Context) (<-chan entity.PostEvent, error)
 			Ack:  func() error { return message.Ack(false) },
 			Nack: func(requeue bool) error { return message.Nack(false, requeue) },
 		}
+
+		return nil
 	}
 
 	handleMessages := func() {
 		for {
 			select {
 			case message, ok := <-messages:
-				handleMessage(message, ok)
+				// ok is false if messages chan is clsed and reconnection needed
+				if !ok {
+					waitReconnection()
+					continue
+				}
+
+				err := handleMessage(message)
+				if err != nil {
+					c.log.Error(errors.Wrap(err, "can't handle message"))
+				}
 			case <-ctx.Done():
 				close(posts)
 				return

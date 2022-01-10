@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"gbu-telegram-bot/internal/bot"
 	"gbu-telegram-bot/internal/entity"
 
 	"gbu-telegram-bot/pkg/logger"
@@ -24,6 +25,8 @@ type Consumer struct {
 
 	mu *sync.Mutex
 }
+
+var _ bot.Consumer = &Consumer{}
 
 // New returns bot.Consumer implementation.
 func New(rabbitConfig RabbitConfig, log logger.Logger) *Consumer {

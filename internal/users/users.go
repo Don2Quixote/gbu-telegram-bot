@@ -3,6 +3,7 @@ package users
 import (
 	"context"
 
+	"gbu-telegram-bot/internal/bot"
 	"gbu-telegram-bot/internal/entity"
 
 	"github.com/jackc/pgx/v4"
@@ -14,6 +15,8 @@ import (
 type Users struct {
 	db *pgxpool.Pool
 }
+
+var _ bot.Users = &Users{}
 
 // New returns bot.Users imlementation.
 func New(pool *pgxpool.Pool) *Users {

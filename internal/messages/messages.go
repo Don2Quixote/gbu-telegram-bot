@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"gbu-telegram-bot/internal/bot"
 	"gbu-telegram-bot/internal/entity"
 
 	"gbu-telegram-bot/pkg/logger"
@@ -23,6 +24,8 @@ type Messages struct {
 	// sending locked each sending for duration specified as cfg.SendingDelay
 	sending *sync.Mutex
 }
+
+var _ bot.Messages = &Messages{}
 
 // New returns bot.Messages implementation.
 func New(bot *tgbotapi.BotAPI, cfg Config, log logger.Logger) *Messages {

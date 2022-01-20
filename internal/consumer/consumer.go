@@ -76,6 +76,8 @@ func (c *Consumer) Init(ctx context.Context) error {
 	errs := make(chan *amqp.Error)
 	ch.NotifyClose(errs)
 
+	// TOOD: ctx for first Init's call can be differnet (for example WithTimeout to limit
+	// connecting time). In handleChannelClose this ctx is reused.
 	handleChannelClose := func() {
 		closeErr := <-errs // This chan will get a value when rabbit channel will be closed
 
@@ -89,6 +91,7 @@ func (c *Consumer) Init(ctx context.Context) error {
 		}
 
 		for attempt, isConnected := 1, false; !isConnected; attempt++ {
+			// TODO: time.Sleep should be replaced with sleep.WithContext
 			time.Sleep(cfg.ReconnectDelay)
 
 			err := c.Init(ctx)
@@ -117,18 +120,20 @@ func (c *Consumer) Consume(ctx context.Context) (<-chan entity.PostEvent, error)
 
 	posts := make(chan entity.PostEvent)
 
-	waitReconnection := func() {
+	// waitReconnection tryies to consume from queue
+	// returns false if context closed before reconnected, true otherwise
+	waitReconnection := func() bool {
 		// Loop until connection reestablished or context closed
 		for {
 			isCtxClosed := sleep.WithContext(ctx, c.rabbitConfig.ReconnectDelay)
 			if isCtxClosed {
-				close(posts)
-				return
+				return false
 			}
 
+			// TODO: Guess it can be a data race with c.rabbit
 			messages, err = c.rabbit.Consume(postsQueue, consumerName, false, false, false, false, nil)
 			if err == nil {
-				return
+				return true
 			}
 		}
 	}
@@ -155,7 +160,11 @@ func (c *Consumer) Consume(ctx context.Context) (<-chan entity.PostEvent, error)
 			case message, ok := <-messages:
 				// ok is false if messages chan is clsed and reconnection needed
 				if !ok {
-					waitReconnection()
+					ok := waitReconnection()
+					if !ok {
+						close(posts)
+						return
+					}
 					continue
 				}
 

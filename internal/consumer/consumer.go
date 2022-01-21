@@ -160,8 +160,8 @@ func (c *Consumer) Consume(ctx context.Context) (<-chan entity.PostEvent, error)
 			case message, ok := <-messages:
 				// ok is false if messages chan is clsed and reconnection needed
 				if !ok {
-					ok := waitReconnection()
-					if !ok {
+					isReconnected := waitReconnection()
+					if !isReconnected {
 						close(posts)
 						return
 					}

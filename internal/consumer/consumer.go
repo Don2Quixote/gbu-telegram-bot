@@ -76,7 +76,7 @@ func (c *Consumer) Init(ctx context.Context) error {
 	errs := make(chan *amqp.Error)
 	ch.NotifyClose(errs)
 
-	// TOOD: ctx for first Init's call can be differnet (for example WithTimeout to limit
+	// TODO: ctx for first Init's call can be differnet (for example WithTimeout to limit
 	// connecting time). In handleChannelClose this ctx is reused.
 	handleChannelClose := func() {
 		closeErr := <-errs // This chan will get a value when rabbit channel will be closed

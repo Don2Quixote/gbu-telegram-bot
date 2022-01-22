@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"sync"
-	"time"
 
 	"gbu-telegram-bot/internal/bot"
 	"gbu-telegram-bot/internal/entity"
@@ -42,11 +41,14 @@ func New(rabbitConfig RabbitConfig, log logger.Logger) *Consumer {
 // Init connects to rabbit and gets rabbit channel, after what
 // initializes rabbit's entiies like exchanges, queues etc.
 // It also registers a handler for channel closed event to reconnect.
-func (c *Consumer) Init(ctx context.Context) error {
+// Close handler uses processCtx for it's calls because ctx for Init's call
+// can be another: for example, limited as WithTimeout.
+func (c *Consumer) Init(ctx, processCtx context.Context) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
 	cfg := c.rabbitConfig
+
 	conn, err := rabbit.Dial(cfg.Host, cfg.User, cfg.Pass, cfg.Vhost, cfg.Amqps)
 	if err != nil {
 		return errors.Wrap(err, "can't connect to rabbit")
@@ -76,8 +78,6 @@ func (c *Consumer) Init(ctx context.Context) error {
 	errs := make(chan *amqp.Error)
 	ch.NotifyClose(errs)
 
-	// TODO: ctx for first Init's call can be differnet (for example WithTimeout to limit
-	// connecting time). In handleChannelClose this ctx is reused.
 	handleChannelClose := func() {
 		closeErr := <-errs // This chan will get a value when rabbit channel will be closed
 
@@ -91,10 +91,9 @@ func (c *Consumer) Init(ctx context.Context) error {
 		}
 
 		for attempt, isConnected := 1, false; !isConnected; attempt++ {
-			// TODO: time.Sleep should be replaced with sleep.WithContext
-			time.Sleep(cfg.ReconnectDelay)
+			sleep.WithContext(processCtx, cfg.ReconnectDelay)
 
-			err := c.Init(ctx)
+			err := c.Init(processCtx, processCtx)
 			if err != nil {
 				c.log.Warn(errors.Wrapf(err, "can't re-init consuemr (attempt #%d)", attempt))
 				continue

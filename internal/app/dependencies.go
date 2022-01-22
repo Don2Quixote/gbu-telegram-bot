@@ -39,7 +39,8 @@ func makeDependencies(
 		Amqps:          cfg.RabbitAmqps,
 		ReconnectDelay: time.Duration(cfg.RabbitReconnectDelay) * time.Second,
 	}, log)
-	err := consumer.Init(ctx)
+
+	err := consumer.Init(ctx, ctx)
 	if err != nil {
 		return nil, nil, nil, errors.Wrap(err, "can't init consumer")
 	}

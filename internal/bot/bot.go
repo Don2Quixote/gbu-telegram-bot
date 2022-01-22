@@ -12,16 +12,16 @@ import (
 // Bot is struct that incapsulates business-logic's dependencies (interfaces).
 type Bot struct {
 	users    Users
-	consumer Consumer
+	posts    Posts
 	messages Messages
 	log      logger.Logger
 }
 
 // New returns new bot with main business-logic of this service.
-func New(users Users, consumer Consumer, messages Messages, log logger.Logger) *Bot {
+func New(users Users, posts Posts, messages Messages, log logger.Logger) *Bot {
 	return &Bot{
 		users:    users,
-		consumer: consumer,
+		posts:    posts,
 		messages: messages,
 		log:      log,
 	}
@@ -29,7 +29,7 @@ func New(users Users, consumer Consumer, messages Messages, log logger.Logger) *
 
 func (b *Bot) Launch(ctx context.Context) error {
 	// posts chan will be closed when context will be closed.
-	posts, err := b.consumer.Consume(ctx)
+	posts, err := b.posts.Consume(ctx)
 	if err != nil {
 		return errors.Wrap(err, "can't consume events about new posts")
 	}

@@ -6,10 +6,10 @@ import (
 	"gbu-telegram-bot/internal/entity"
 )
 
-// Consumer is interface for interacting with message broker
+// Posts is interface for interacting with message broker
 // from where events about new posts in blog come.
-type Consumer interface {
-	// Consumer returns channel to which new blog's posts will be sent.
+type Posts interface {
+	// Consume returns channel to which new blog's posts will be sent.
 	// Returned chan should be closed when context will be closed.
 	Consume(ctx context.Context) (<-chan entity.PostEvent, error)
 }

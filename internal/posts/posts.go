@@ -1,4 +1,4 @@
-package consumer
+package posts
 
 import (
 	"context"
@@ -16,8 +16,8 @@ import (
 	"github.com/streadway/amqp"
 )
 
-// Consumer is implementation for bot.Consumer interface.
-type Consumer struct {
+// Posts is implementation for bot.Posts interface.
+type Posts struct {
 	rabbitConfig RabbitConfig
 	rabbit       *amqp.Channel
 	log          logger.Logger
@@ -25,11 +25,11 @@ type Consumer struct {
 	mu *sync.Mutex
 }
 
-var _ bot.Consumer = &Consumer{}
+var _ bot.Posts = &Posts{}
 
-// New returns bot.Consumer implementation.
-func New(rabbitConfig RabbitConfig, log logger.Logger) *Consumer {
-	return &Consumer{
+// New returns bot.Posts implementation.
+func New(rabbitConfig RabbitConfig, log logger.Logger) *Posts {
+	return &Posts{
 		rabbitConfig: rabbitConfig,
 		rabbit:       nil, // Initialized in Init method
 		log:          log,
@@ -43,11 +43,11 @@ func New(rabbitConfig RabbitConfig, log logger.Logger) *Consumer {
 // It also registers a handler for channel closed event to reconnect.
 // Close handler uses processCtx for it's calls because ctx for Init's call
 // can be another: for example, limited as WithTimeout.
-func (c *Consumer) Init(ctx, processCtx context.Context) error {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+func (p *Posts) Init(ctx, processCtx context.Context) error {
+	p.mu.Lock()
+	defer p.mu.Unlock()
 
-	cfg := c.rabbitConfig
+	cfg := p.rabbitConfig
 
 	conn, err := rabbit.Dial(cfg.Host, cfg.User, cfg.Pass, cfg.Vhost, cfg.Amqps)
 	if err != nil {
@@ -81,38 +81,38 @@ func (c *Consumer) Init(ctx, processCtx context.Context) error {
 	handleChannelClose := func() {
 		closeErr := <-errs // This chan will get a value when rabbit channel will be closed
 
-		c.log.Error(errors.Wrap(closeErr, "rabbit channel closed"))
+		p.log.Error(errors.Wrap(closeErr, "rabbit channel closed"))
 
 		if !conn.IsClosed() {
 			err := conn.Close()
 			if err != nil {
-				c.log.Error(errors.Wrap(err, "can't close rabbit connection"))
+				p.log.Error(errors.Wrap(err, "can't close rabbit connection"))
 			}
 		}
 
 		for attempt, isConnected := 1, false; !isConnected; attempt++ {
 			sleep.WithContext(processCtx, cfg.ReconnectDelay)
 
-			err := c.Init(processCtx, processCtx)
+			err := p.Init(processCtx, processCtx)
 			if err != nil {
-				c.log.Warn(errors.Wrapf(err, "can't re-init consuemr (attempt #%d)", attempt))
+				p.log.Warn(errors.Wrapf(err, "can't re-init consuemr (attempt #%d)", attempt))
 				continue
 			}
 
 			isConnected = true
 		}
 
-		c.log.Info("reconnected to rabbit")
+		p.log.Info("reconnected to rabbit")
 	}
 	go handleChannelClose()
 
-	c.rabbit = ch
+	p.rabbit = ch
 
 	return nil
 }
 
-func (c *Consumer) Consume(ctx context.Context) (<-chan entity.PostEvent, error) {
-	messages, err := c.rabbit.Consume(postsQueue, consumerName, false, false, false, false, nil)
+func (p *Posts) Consume(ctx context.Context) (<-chan entity.PostEvent, error) {
+	messages, err := p.rabbit.Consume(postsQueue, consumerName, false, false, false, false, nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't consume messages from queue")
 	}
@@ -124,13 +124,13 @@ func (c *Consumer) Consume(ctx context.Context) (<-chan entity.PostEvent, error)
 	waitReconnection := func() bool {
 		// Loop until connection reestablished or context closed
 		for {
-			isCtxClosed := sleep.WithContext(ctx, c.rabbitConfig.ReconnectDelay)
+			isCtxClosed := sleep.WithContext(ctx, p.rabbitConfig.ReconnectDelay)
 			if isCtxClosed {
 				return false
 			}
 
 			// TODO: Guess it can be a data race with c.rabbit
-			messages, err = c.rabbit.Consume(postsQueue, consumerName, false, false, false, false, nil)
+			messages, err = p.rabbit.Consume(postsQueue, consumerName, false, false, false, false, nil)
 			if err == nil {
 				return true
 			}
@@ -169,7 +169,7 @@ func (c *Consumer) Consume(ctx context.Context) (<-chan entity.PostEvent, error)
 
 				err := handleMessage(message)
 				if err != nil {
-					c.log.Error(errors.Wrap(err, "can't handle message"))
+					p.log.Error(errors.Wrap(err, "can't handle message"))
 				}
 			case <-ctx.Done():
 				close(posts)

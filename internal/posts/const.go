@@ -1,4 +1,4 @@
-package consumer
+package posts
 
 const postsQueue = "posts"
 const postsExchange = "posts"

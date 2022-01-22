@@ -1,4 +1,4 @@
-package consumer
+package posts
 
 import "gbu-telegram-bot/internal/entity"
 

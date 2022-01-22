@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"gbu-telegram-bot/internal/bot"
-	"gbu-telegram-bot/internal/consumer"
 	"gbu-telegram-bot/internal/messages"
+	"gbu-telegram-bot/internal/posts"
 	"gbu-telegram-bot/internal/users"
 
 	"gbu-telegram-bot/pkg/logger"
@@ -25,13 +25,13 @@ func makeDependencies(
 	log logger.Logger,
 ) (
 	bot.Users,
-	bot.Consumer,
+	bot.Posts,
 	bot.Messages,
 	error,
 ) {
 	users := users.New(pool)
 
-	consumer := consumer.New(consumer.RabbitConfig{
+	posts := posts.New(posts.RabbitConfig{
 		Host:           cfg.RabbitHost,
 		User:           cfg.RabbitUser,
 		Pass:           cfg.RabbitPass,
@@ -40,7 +40,7 @@ func makeDependencies(
 		ReconnectDelay: time.Duration(cfg.RabbitReconnectDelay) * time.Second,
 	}, log)
 
-	err := consumer.Init(ctx, ctx)
+	err := posts.Init(ctx, ctx)
 	if err != nil {
 		return nil, nil, nil, errors.Wrap(err, "can't init consumer")
 	}
@@ -50,5 +50,5 @@ func makeDependencies(
 		SendingDelay: time.Millisecond * time.Duration(cfg.MessagesSendingDelay),
 	}, log)
 
-	return users, consumer, messages, nil
+	return users, posts, messages, nil
 }

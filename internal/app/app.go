@@ -31,13 +31,13 @@ func Run(ctx context.Context, log logger.Logger) error {
 	defer pool.Close()
 
 	// Making dependencies for bot
-	users, consumer, messages, err := makeDependencies(ctx, cfg, pool, tgBot, log)
+	users, posts, messages, err := makeDependencies(ctx, cfg, pool, tgBot, log)
 	if err != nil {
 		return errors.Wrap(err, "can't construct dependencies")
 	}
 
 	// Constructing and launching bot
-	bot := bot.New(users, consumer, messages, log)
+	bot := bot.New(users, posts, messages, log)
 	err = bot.Launch(ctx)
 	if err != nil {
 		return errors.Wrap(err, "can't launch bot")

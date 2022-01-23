@@ -19,10 +19,10 @@ import (
 // Posts is implementation for bot.Posts interface.
 type Posts struct {
 	rabbitConfig RabbitConfig
-	rabbit       *amqp.Channel
 	log          logger.Logger
 
-	mu *sync.Mutex
+	rabbit *amqp.Channel
+	mu     *sync.Mutex
 }
 
 var _ bot.Posts = &Posts{}
@@ -31,10 +31,10 @@ var _ bot.Posts = &Posts{}
 func New(rabbitConfig RabbitConfig, log logger.Logger) *Posts {
 	return &Posts{
 		rabbitConfig: rabbitConfig,
-		rabbit:       nil, // Initialized in Init method
 		log:          log,
 
-		mu: &sync.Mutex{},
+		rabbit: nil, // Initialized in Init method.
+		mu:     &sync.Mutex{},
 	}
 }
 
@@ -69,7 +69,7 @@ func (p *Posts) Init(ctx, processCtx context.Context) error {
 		return errors.Wrap(err, "can't declare posts queue")
 	}
 
-	// Exchange is fanout so no binding key required
+	// Exchange is fanout so no binding key required.
 	err = ch.QueueBind(postsQueue, "", postsExchange, false, nil)
 	if err != nil {
 		return errors.Wrap(err, "can't bind posts queue to posts exchange")
@@ -79,7 +79,7 @@ func (p *Posts) Init(ctx, processCtx context.Context) error {
 	ch.NotifyClose(errs)
 
 	handleChannelClose := func() {
-		closeErr := <-errs // This chan will get a value when rabbit channel will be closed
+		closeErr := <-errs // This chan will get a value when rabbit channel will be closed.
 
 		p.log.Error(errors.Wrap(closeErr, "rabbit channel closed"))
 
@@ -119,17 +119,17 @@ func (p *Posts) Consume(ctx context.Context) (<-chan entity.PostEvent, error) {
 
 	posts := make(chan entity.PostEvent)
 
-	// waitReconnection tryies to consume from queue
-	// returns false if context closed before reconnected, true otherwise
+	// waitReconnection tryies to consume from queue.
+	// returns false if context closed before reconnected, true otherwise.
 	waitReconnection := func() bool {
-		// Loop until connection reestablished or context closed
+		// Loop until connection reestablished or context closed.
 		for {
 			isCtxClosed := sleep.WithContext(ctx, p.rabbitConfig.ReconnectDelay)
 			if isCtxClosed {
 				return false
 			}
 
-			// TODO: Guess it can be a data race with c.rabbit
+			// TODO: Guess it can be a data race with c.rabbit.
 			messages, err = p.rabbit.Consume(postsQueue, consumerName, false, false, false, false, nil)
 			if err == nil {
 				return true
@@ -157,7 +157,7 @@ func (p *Posts) Consume(ctx context.Context) (<-chan entity.PostEvent, error) {
 		for {
 			select {
 			case message, ok := <-messages:
-				// ok is false if messages chan is closed and reconnection needed
+				// ok is false if messages chan is closed and reconnection needed.
 				if !ok {
 					isReconnected := waitReconnection()
 					if !isReconnected {

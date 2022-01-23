@@ -46,7 +46,7 @@ func makeDependencies(
 	}
 
 	messages := messages.New(bot, messages.Config{
-		Webhook:      nil, // TODO: Should be configurable, but webhooks not implemented
+		Webhook:      nil, // TODO: Should be configurable, but webhooks not implemented.
 		SendingDelay: time.Millisecond * time.Duration(cfg.MessagesSendingDelay),
 	}, log)
 

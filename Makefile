@@ -13,3 +13,7 @@ lint:
 
 docker:
 	./scripts/docker.sh
+
+stat:
+	./scripts/stat.sh
+	

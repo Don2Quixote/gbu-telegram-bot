@@ -6,7 +6,7 @@ PACKAGES_COUNT=$(go list ./... | wc -l)
 # Counts all .go files in project.
 FILES_COUNT=$(find | grep "\\.go$" | wc -l)
 
-# Coutns all lines and chars in all .go files in project.
+# Counts all lines and chars in all .go files in project.
 # Result is space separated: lines chars.
 WC_RESULT=$(cat $(find | grep "\\.go$") | wc -l -c)
 

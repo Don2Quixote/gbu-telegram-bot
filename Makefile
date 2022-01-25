@@ -1,4 +1,4 @@
-.PHONY: run test
+.PHONY: run test lint docker stat
 
 .SILENT:
 

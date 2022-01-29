@@ -27,6 +27,9 @@ func New(users Users, posts Posts, messages Messages, log logger.Logger) *Bot {
 	}
 }
 
+// Launch launches event's consuming and their's handling.
+// Blocks until context closed or launching error happened.
+// Returns nil error if context closed.
 func (b *Bot) Launch(ctx context.Context) error {
 	// posts chan will be closed when context will be closed.
 	posts, err := b.posts.Consume(ctx)

@@ -91,7 +91,11 @@ func (p *Posts) Init(ctx, processCtx context.Context) error {
 		}
 
 		for attempt, isConnected := 1, false; !isConnected; attempt++ {
-			sleep.WithContext(processCtx, cfg.ReconnectDelay)
+			isCtxClosed := sleep.WithContext(processCtx, cfg.ReconnectDelay)
+			if isCtxClosed {
+				p.log.Info("could not re-init consumer until context closed")
+				return
+			}
 
 			err := p.Init(processCtx, processCtx)
 			if err != nil {

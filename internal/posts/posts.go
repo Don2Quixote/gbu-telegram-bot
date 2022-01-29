@@ -95,7 +95,7 @@ func (p *Posts) Init(ctx, processCtx context.Context) error {
 
 			err := p.Init(processCtx, processCtx)
 			if err != nil {
-				p.log.Warn(errors.Wrapf(err, "can't re-init consuemr (attempt #%d)", attempt))
+				p.log.Warn(errors.Wrapf(err, "can't re-init consumer (attempt #%d)", attempt))
 				continue
 			}
 

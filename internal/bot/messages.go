@@ -68,7 +68,7 @@ func (b *Bot) handleSubscribe(ctx context.Context, from entity.MessageSender) {
 
 	err = b.messages.Send(ctx, from.ID, subscribedMessage)
 	if err != nil {
-		b.log.Error(errors.Wrapf(err, "can't send unsubscribed message to %s", from.String()))
+		b.log.Error(errors.Wrapf(err, "can't send subscribed message to %s", from.String()))
 	}
 }
 

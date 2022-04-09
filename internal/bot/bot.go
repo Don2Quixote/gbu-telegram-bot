@@ -34,13 +34,13 @@ func (b *Bot) Launch(ctx context.Context) error {
 	// posts chan will be closed when context will be closed.
 	posts, err := b.posts.Consume(ctx)
 	if err != nil {
-		return errors.Wrap(err, "can't consume events about new posts")
+		return errors.Wrap(err, "consume events about new posts")
 	}
 
 	// messages chan will be closed when context will be closed.
 	messages, err := b.messages.Consume(ctx)
 	if err != nil {
-		return errors.Wrap(err, "can't consume incoming messages")
+		return errors.Wrap(err, "consume incoming messages")
 	}
 
 	wg := &sync.WaitGroup{} // WaitGroup to wait for handlers finish their job.

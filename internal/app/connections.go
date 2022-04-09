@@ -13,13 +13,13 @@ import (
 func makeConnections(ctx context.Context, cfg appConfig) (*pgxpool.Pool, *tgbotapi.BotAPI, error) {
 	pool, err := pgxpool.Connect(ctx, cfg.PostgresHost, cfg.PostgresUser, cfg.PostgresPass, cfg.PostgresDBName)
 	if err != nil {
-		return nil, nil, errors.Wrap(err, "can't connect to postgres")
+		return nil, nil, errors.Wrap(err, "connect to postgres")
 	}
 
 	bot, err := tgbotapi.NewBotAPI(cfg.TelegramBotToken)
 	if err != nil {
 		pool.Close()
-		return nil, nil, errors.Wrap(err, "can't create bot API")
+		return nil, nil, errors.Wrap(err, "create bot API")
 	}
 
 	return pool, bot, nil

@@ -30,7 +30,7 @@ func (u *Users) Add(ctx context.Context, user entity.User) error {
 
 	_, err := u.db.Exec(ctx, query, user.ID, user.Username, user.Name, user.IsSubscribed)
 	if err != nil {
-		return errors.Wrap(err, "can't exec insert query")
+		return errors.Wrap(err, "exec insert query")
 	}
 
 	return nil
@@ -42,12 +42,13 @@ func (u *Users) Get(ctx context.Context, id int64) (entity.User, error) {
 	row := u.db.QueryRow(ctx, query, id)
 
 	user := entity.User{ID: id}
+
 	err := row.Scan(&user.Username, &user.Name, &user.IsSubscribed)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return entity.User{}, entity.ErrUserNotFound
 	}
 	if err != nil {
-		return entity.User{}, errors.Wrap(err, "can't scan")
+		return entity.User{}, errors.Wrap(err, "scan row")
 	}
 
 	return user, nil
@@ -58,7 +59,7 @@ func (u *Users) Subscribe(ctx context.Context, id int64) error {
 
 	_, err := u.db.Exec(ctx, query, id)
 	if err != nil {
-		return errors.Wrap(err, "can't exec query")
+		return errors.Wrap(err, "exec update query")
 	}
 
 	return nil
@@ -69,7 +70,7 @@ func (u *Users) Unsubscribe(ctx context.Context, id int64) error {
 
 	_, err := u.db.Exec(ctx, query, id)
 	if err != nil {
-		return errors.Wrap(err, "can't exec query")
+		return errors.Wrap(err, "exec update query")
 	}
 
 	return nil
@@ -80,17 +81,19 @@ func (u *Users) GetSubscribedIDs(ctx context.Context) ([]int64, error) {
 
 	rows, err := u.db.Query(ctx, query)
 	if err != nil {
-		return nil, errors.Wrap(err, "can't exec select query")
+		return nil, errors.Wrap(err, "exec select query")
 	}
 	defer rows.Close()
 
 	var ids []int64
 	for rows.Next() {
 		var id int64
+
 		err := rows.Scan(&id)
 		if err != nil {
-			return nil, errors.Wrap(err, "can't scan row")
+			return nil, errors.Wrap(err, "scan row")
 		}
+
 		ids = append(ids, id)
 	}
 

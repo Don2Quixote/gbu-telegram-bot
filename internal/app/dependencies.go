@@ -42,7 +42,7 @@ func makeDependencies(
 
 	err := posts.Init(ctx, ctx)
 	if err != nil {
-		return nil, nil, nil, errors.Wrap(err, "can't init posts")
+		return nil, nil, nil, errors.Wrap(err, "init posts")
 	}
 
 	messages := messages.New(bot, messages.Config{

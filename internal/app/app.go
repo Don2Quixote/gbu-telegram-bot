@@ -20,27 +20,27 @@ func Run(ctx context.Context, log logger.Logger) error {
 	var cfg appConfig
 	err := config.Parse(&cfg)
 	if err != nil {
-		return errors.Wrap(err, "can't parse config")
+		return errors.Wrap(err, "parse config")
 	}
 
 	// Getting required connections.
 	pool, tgBot, err := makeConnections(ctx, cfg)
 	if err != nil {
-		return errors.Wrap(err, "can't make connections")
+		return errors.Wrap(err, "make connections")
 	}
 	defer pool.Close()
 
 	// Making dependencies for bot.
 	users, posts, messages, err := makeDependencies(ctx, cfg, pool, tgBot, log)
 	if err != nil {
-		return errors.Wrap(err, "can't construct dependencies")
+		return errors.Wrap(err, "construct dependencies")
 	}
 
 	// Constructing and launching bot.
 	bot := bot.New(users, posts, messages, log)
 	err = bot.Launch(ctx)
 	if err != nil {
-		return errors.Wrap(err, "can't launch bot")
+		return errors.Wrap(err, "launch bot")
 	}
 
 	log.Info("app finished")
